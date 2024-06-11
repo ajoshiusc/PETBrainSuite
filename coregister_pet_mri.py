@@ -2,7 +2,7 @@ import SimpleITK as sitk
 
 def load_nifti_image(file_path):
     """Load a NIfTI image and return the SimpleITK image object."""
-    return sitk.ReadImage(file_path)
+    return sitk.ReadImage(file_path,sitk.sitkFloat32)
 
 def save_nifti_image(sitk_image, output_path):
     """Save a SimpleITK image object as a NIfTI file."""
@@ -32,7 +32,7 @@ def coregister_images(fixed_image_path, moving_image_path, output_path):
 
     # Optimizer settings.
     registration_method.SetOptimizerAsGradientDescent(learningRate=1.0, 
-                                                      numberOfIterations=100, 
+                                                      numberOfIterations=1000, 
                                                       convergenceMinimumValue=1e-6, 
                                                       convergenceWindowSize=10)
     registration_method.SetOptimizerScalesFromPhysicalShift()
@@ -57,9 +57,9 @@ def coregister_images(fixed_image_path, moving_image_path, output_path):
     print(f"Coregistered image saved to {output_path}")
 
 # File paths
-fixed_image_path = 'path_to_mri_image.nii'
-moving_image_path = 'path_to_pet_image.nii'
-output_path = 'path_to_registered_pet_image.nii'
+fixed_image_path = '/home/ajoshi/Projects/PETBrainSuite/test_data/mri.nii.gz'
+moving_image_path = '/home/ajoshi/Projects/PETBrainSuite/test_data/pet.nii.gz'
+output_path = '/home/ajoshi/Projects/PETBrainSuite/test_data/pet2mri.nii.gz'
 
 # Coregister PET to MRI
 coregister_images(fixed_image_path, moving_image_path, output_path)

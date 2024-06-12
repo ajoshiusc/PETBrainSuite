@@ -55,7 +55,7 @@ smoothed_pet_values = smooth_surface_data(sampled_pet_values, surface_faces)
 # visualize the smoothed PET values on the cortical surface and save to a png file using nilearn
 import nilearn.plotting as nlp
 
-nlp.view_surf(surface_coords, surface_faces, smoothed_pet_values, cmap='viridis', symmetric_cmap=False, colorbar=True, threshold=None, bg_map=None, vmax=None, figure=None, title='Smoothed PET values on cortical surface', output_file='smoothed_pet_surface.png', display_mode='auto', cbar_vmin=None, cbar_vmax=None, resampling_interpolation='continuous', view='lateral', mask=None, darkness=1, **kwargs)
+#nlp.view_surf(surface_coords, surface_faces, smoothed_pet_values, cmap='viridis') #, symmetric_cmap=False, colorbar=True, threshold=None, bg_map=None, vmax=None, figure=None, title='Smoothed PET values on cortical surface', output_file='smoothed_pet_surface.png', display_mode='auto', view='lateral')
 
 print("Smoothed PET values visualized on the cortical surface and saved to 'smoothed_pet_surface.png'")
 

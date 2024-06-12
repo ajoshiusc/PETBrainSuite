@@ -38,7 +38,7 @@ path_to_corrected_pet_image = '/home/ajoshi/Projects/PETBrainSuite/test_data/pet
 
 # read the GM fraction, threshold it at 0.5, and write it to a mask
 gm_frac = nib.load(path_to_gm_frac).get_fdata()
-gm_mask = gm_frac > 0.5
+gm_mask = gm_frac > 0.01
 gm_mask_img = nib.Nifti1Image(gm_mask.astype(np.uint8), nib.load(path_to_mri_image).affine)
 nib.save(gm_mask_img, path_to_gray_matter_mask)
 print("Gray matter mask saved.")

@@ -3,6 +3,7 @@ import numpy as np
 import scipy.ndimage as ndimage
 from nibabel.freesurfer import read_geometry
 from dfsio import readdfs
+from surfproc import view_patch_vtk, patch_color_attrib, smooth_patch, view_patch, view_patch_vtk
 
 
 def load_nifti_image(file_path):
@@ -22,7 +23,7 @@ def load_cortical_surface(surface_path):
 def sample_pet_to_surface(pet_data, pet_affine, surface_coords):
     """Sample PET data onto the cortical surface."""
     # Transform surface coordinates to voxel space
-    surface_coords_voxel = nib.affines.apply_affine(np.linalg.inv(pet_affine), surface_coords)
+    surface_coords_voxel = surface_coords #nib.affines.apply_affine(np.linalg.inv(pet_affine), surface_coords)
 
     # Sample PET values at surface vertices
     sampled_values = ndimage.map_coordinates(pet_data, surface_coords_voxel.T, order=1)
@@ -37,8 +38,8 @@ def smooth_surface_data(data, faces, iterations=10):
     return smoothed_data
 
 # File paths
-pet_image_path = '/home/ajoshi/Projects/PETBrainSuite/test_data/pet2mri.nii.gz'
-cortical_surface_path = '/home/ajoshi/Projects/PETBrainSuite/test_data/mri.inner.cortex.dfs'
+pet_image_path = '/home/ajoshi/Projects/PETBrainSuite/test_data/pet_pvc.nii.gz'
+cortical_surface_path = '/home/ajoshi/Projects/PETBrainSuite/test_data/mri.left.mid.cortex.svreg.dfs'
 
 # Load PVC-corrected PET volume
 pet_data, pet_affine = load_nifti_image(pet_image_path)
@@ -50,7 +51,7 @@ surface_coords, surface_faces = load_cortical_surface(cortical_surface_path)
 sampled_pet_values = sample_pet_to_surface(pet_data, pet_affine, surface_coords)
 
 # Smooth the sampled PET data
-smoothed_pet_values = smooth_surface_data(sampled_pet_values, surface_faces)
+smoothed_pet_values = smooth_surface_data(sampled_pet_values, surface_faces, iterations=10)
 
 # visualize the smoothed PET values on the cortical surface and save to a png file using nilearn
 import nilearn.plotting as nlp
@@ -63,13 +64,27 @@ print("Smoothed PET values visualized on the cortical surface and saved to 'smoo
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-fig = plt.figure()
+""" fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 ax.plot_trisurf(surface_coords[:, 0], surface_coords[:, 1], surface_coords[:, 2], triangles=surface_faces, cmap='viridis', alpha=0.5)
 sc = ax.scatter(surface_coords[:, 0], surface_coords[:, 1], surface_coords[:, 2], c=smoothed_pet_values, cmap='viridis')
 plt.colorbar(sc)
 plt.savefig('smoothed_pet_surface.png')
-plt.show()
+plt.show() """
+
+
+class surface:
+    def __init__(self, coords, faces):
+        self.vertices = coords
+        self.faces = faces
+
+s = surface(surface_coords, surface_faces)
+s.attributes = smoothed_pet_values #sampled_pet_values
+
+s = patch_color_attrib(s, s.attributes, cmap='jet', clim=[0, 1000])
+
+view_patch_vtk(s)
+
 
 
 # Save smoothed PET values to a file (e.g., text file)

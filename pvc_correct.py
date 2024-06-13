@@ -24,7 +24,7 @@ def muller_gaertner_pvc(pet_data, mri_data, gray_matter_mask, white_matter_mask,
 
 
 # input files
-path_to_pet_image = '/home/ajoshi/Projects/PETBrainSuite/test_data/pet2mri.nii.gz'
+path_to_pet_image = '/home/ajoshi/Projects/PETBrainSuite/test_data/pet2mri2_itksnap.nii.gz'
 path_to_mri_image = '/home/ajoshi/Projects/PETBrainSuite/test_data/mri.nii.gz'
 path_to_white_matter_mask = '/home/ajoshi/Projects/PETBrainSuite/test_data/mri.cortex.dewisp.mask.nii.gz'
 

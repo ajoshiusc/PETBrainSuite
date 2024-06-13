@@ -24,22 +24,22 @@ def coregister_images(fixed_image_path, moving_image_path, output_path):
     registration_method = sitk.ImageRegistrationMethod()
 
     # Similarity metric settings.
-    registration_method.SetMetricAsMattesMutualInformation(numberOfHistogramBins=50)
-    registration_method.SetMetricSamplingStrategy(registration_method.RANDOM)
-    registration_method.SetMetricSamplingPercentage(0.01)
+    registration_method.SetMetricAsMattesMutualInformation() #(numberOfHistogramBins=150)
+    #registration_method.SetMetricSamplingStrategy(registration_method.RANDOM)
+    #registration_method.SetMetricSamplingPercentage(0.1)
 
     registration_method.SetInterpolator(sitk.sitkLinear)
 
     # Optimizer settings.
-    registration_method.SetOptimizerAsGradientDescent(learningRate=1.0, 
+    registration_method.SetOptimizerAsGradientDescent(learningRate=1, 
                                                       numberOfIterations=1000, 
-                                                      convergenceMinimumValue=1e-6, 
-                                                      convergenceWindowSize=10)
+                                                      convergenceMinimumValue=1e-8, 
+                                                      convergenceWindowSize=20)
     registration_method.SetOptimizerScalesFromPhysicalShift()
 
     # Setup for the multi-resolution framework.
-    registration_method.SetShrinkFactorsPerLevel(shrinkFactors=[4, 2, 1])
-    registration_method.SetSmoothingSigmasPerLevel(smoothingSigmas=[2, 1, 0])
+    registration_method.SetShrinkFactorsPerLevel(shrinkFactors=[8, 4, 2, 1])
+    registration_method.SetSmoothingSigmasPerLevel(smoothingSigmas=[4, 2, 1, 0])
     registration_method.SmoothingSigmasAreSpecifiedInPhysicalUnitsOn()
 
     # Don't optimize in-place, we would possibly like to run this cell multiple times.
@@ -59,7 +59,7 @@ def coregister_images(fixed_image_path, moving_image_path, output_path):
 # File paths
 fixed_image_path = '/home/ajoshi/Projects/PETBrainSuite/test_data/mri.nii.gz'
 moving_image_path = '/home/ajoshi/Projects/PETBrainSuite/test_data/pet.nii.gz'
-output_path = '/home/ajoshi/Projects/PETBrainSuite/test_data/pet2mri.nii.gz'
+output_path = '/home/ajoshi/Projects/PETBrainSuite/test_data/pet2mri2.nii.gz'
 
 # Coregister PET to MRI
 coregister_images(fixed_image_path, moving_image_path, output_path)

@@ -38,7 +38,7 @@ def smooth_surface_data(data, faces, iterations=10):
     return smoothed_data
 
 # File paths
-pet_image_path = '/home/ajoshi/Projects/PETBrainSuite/test_data/pet_pvc.nii.gz'
+pet_image_path = '/home/ajoshi/Projects/PETBrainSuite/test_data/pet.nii.gz'
 cortical_surface_path = '/home/ajoshi/Projects/PETBrainSuite/test_data/mri.left.mid.cortex.svreg.dfs'
 
 # Load PVC-corrected PET volume
@@ -81,7 +81,7 @@ class surface:
 s = surface(surface_coords, surface_faces)
 s.attributes = smoothed_pet_values #sampled_pet_values
 
-s = patch_color_attrib(s, s.attributes, cmap='jet', clim=[0, 1000])
+s = patch_color_attrib(s, s.attributes, cmap='jet', clim=[0, 1])
 
 view_patch_vtk(s)
 

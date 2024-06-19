@@ -3,24 +3,33 @@ clc;clear all;close all;restoredefaultpath;
 addpath('/home/ajoshi/Projects/svreg/src');
 addpath('/home/ajoshi/Projects/svreg/3rdParty');
 
-tissueFracFile = '/home/ajoshi/Projects/PETBrainSuite/test_data/mri.pvc.frac.nii.gz';
+% PET image coregistered to MRI
 pet2mri_file = '/home/ajoshi/Projects/PETBrainSuite/test_data/pet2mri2_itksnap.nii.gz'; 
+
+% PSF of PET image (from manufacturer)
+xres = '6.0'; yres = '6.0'; zres = '6.0';
+
+% MRI image should be processed using BrainSuite upto SVReg
 mri_basefile = '/home/ajoshi/Projects/PETBrainSuite/test_data/mri';
-
-pvc_mask_file = '/home/ajoshi/Projects/PETBrainSuite/test_data/pet2mri2_itksnap_mask.nii.gz';
-pet2mri_pvc_file = '/home/ajoshi/Projects/PETBrainSuite/test_data/pet2mri2_itksnap_pvc.nii.gz'; 
-pet2surf_file = '/home/ajoshi/Projects/PETBrainSuite/test_data/pet2mri2_itksnap_pvc.mat';
-
 PETPVC_EXE = '/home/ajoshi/Projects/PETBrainSuite/PETPVC-1.2.10/bin/petpvc';
 
 REF_ROIS = [900]% List of ROIS from atlas used as reference
 
-xres = '6.0'; yres = '6.0'; zres = '6.0';
 
 
 
+% Output filenames
+pvc_mask_file = '/home/ajoshi/Projects/PETBrainSuite/test_data/pet2mri2_itksnap_mask.nii.gz';
+pet2mri_pvc_file = '/home/ajoshi/Projects/PETBrainSuite/test_data/pet2mri2_itksnap_pvc.nii.gz'; 
+pet2surf_file = '/home/ajoshi/Projects/PETBrainSuite/test_data/pet2mri2_itksnap_pvc.mat';
 pet_suvr_file = [mri_basefile,'.pet.suvr.nii.gz'];
 pet_ref_mask_file = [mri_basefile,'.pet.ref.mask.nii.gz'];
+
+
+
+
+tissueFracFile = [mri_basefile,'.pvc.frac.nii.gz'];
+
 
 
 tissueFracData = niftiread(tissueFracFile);
@@ -96,10 +105,11 @@ camlight;
 
 [subdir,q] = fileparts(mri_basefile);
 
+
+
+% Activation on atlas (common template)
 left_atlas_surf = readdfs([subdir, '/atlas.left.mid.cortex.svreg.dfs']);
 right_atlas_surf = readdfs([subdir, '/atlas.right.mid.cortex.svreg.dfs']);
-
-
 
 
 figure;
@@ -127,7 +137,7 @@ material dull;axis off;axis equal;axis tight;colormap('hot');view(90,0);clim([0,
 camlight;
 
 
-datal_atlas_sm = smooth_surf_function(left_atlas_surf, a.datal_atlas);%,10,10);
+datal_atlas_sm = smooth_surf_function(left_atlas_surf, a.datal_atlas);
 figure;
 patch('faces',left_atlas_surf_sm.faces,'Vertices',left_atlas_surf_sm.vertices,'facevertexcdata',datal_atlas_sm,'edgecolor','none','facecolor','interp');
 material dull;axis off;axis equal;axis tight;colormap('hot');view(-90,0);clim([0,3]);
